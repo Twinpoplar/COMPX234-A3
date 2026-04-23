@@ -132,6 +132,12 @@ def handle_request(message):
             # Return "OK (<key>, <value>) removed" or "ERR <key> does not exist".
             # Hint: dict.pop(key, None) removes and returns the value, or None if missing.
             increment_stat("get_count")
+            value = tuple_space.pop(key, None)
+            if value is not None:
+                return f"OK ({key}, {value}) removed"
+            else:
+                increment_stat("error_count")
+                return f"ERR {key} does not exist"
 
 
         elif op == "P":
